@@ -1,0 +1,105 @@
+name: ladder-trader
+
+x-runtime-environment: &runtime_environment
+  APP_ENV: development
+  TRADING_MODE: disabled
+  DATABASE_HOST: postgres
+  DATABASE_NAME: ladder_trader
+  DATABASE_USER: ladder_trader
+  DATABASE_PASSWORD_FILE: /run/secrets/postgres_password
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ladder_trader
+      POSTGRES_USER: ladder_trader
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ladder_trader -d ladder_trader"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - backend
+    stop_grace_period: 30s
+
+  migrate:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    entrypoint: ["/migrate"]
+    environment:
+      <<: *runtime_environment
+      MIGRATIONS_DIR: /migrations
+    secrets:
+      - postgres_password
+    volumes:
+      - ../migrations:/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - backend
+    restart: "no"
+    init: true
+
+  trader:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      <<: *runtime_environment
+      HTTP_ADDR: 0.0.0.0:8080
+      METRICS_ADDR: 0.0.0.0:9090
+    secrets:
+      - postgres_password
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:9090:9090"
+    healthcheck:
+      test: ["CMD", "/healthcheck", "http://127.0.0.1:8080/readyz"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - backend
+      - outbound
+    init: true
+    stop_grace_period: 15s
+
+secrets:
+  postgres_password:
+    file: ${POSTGRES_PASSWORD_FILE_PATH:-../secrets/postgres_password}
+
+volumes:
+  postgres-data:
+
+networks:
+  backend:
+    internal: true
+  outbound:

@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: ladder_trader_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ladder_trader_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Formatting
+        run: test -z "$(gofmt -l .)"
+      - name: Unit tests
+        run: go test ./...
+      - name: PostgreSQL migration integration test
+        env:
+          TEST_DATABASE_URL: postgres://postgres:test-only@127.0.0.1:5432/ladder_trader_test?sslmode=disable
+        run: go test -count=1 ./internal/storage/migrate -run TestApplyOnPostgres
+      - name: Race tests
+        run: go test -race ./...
+      - name: Vet
+        run: go vet ./...
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v2.12.2
+      - name: Build
+        run: go build ./cmd/...

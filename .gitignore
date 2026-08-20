@@ -1,0 +1,8 @@
+.DS_Store
+.cache/
+.idea/
+/healthcheck
+/migrate
+/trader
+secrets/*
+!secrets/.gitkeep
