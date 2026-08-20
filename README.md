@@ -2,9 +2,9 @@
 
 Сервис автоматизированного исполнения биржевой «лесенки» из Google Sheets через T‑Invest API.
 
-Статус: документация `draft / implementation-ready`, этап 1 реализации начат. Реальная торговля запрещена.
+Статус: документация `draft / implementation-ready`, этап 2 read-only интеграций начат. Реальная торговля запрещена.
 
-Сейчас реализованы безопасный Go-каркас, принудительный startup в `disabled`, PostgreSQL migration runner, начальная схема данных, health/readiness/status endpoints и Compose-окружение. Broker и Google Sheets adapters ещё отсутствуют, поэтому торговые команды архитектурно недоступны.
+Сейчас реализованы безопасный Go-каркас, принудительный startup в `disabled`, PostgreSQL migration runner, начальная схема данных, health/readiness/status endpoints, Compose-окружение и read-only Google Sheets adapter. Google adapter пока не подключён к startup lifecycle, broker adapter отсутствует, поэтому торговые команды архитектурно недоступны.
 
 ## Цель
 
