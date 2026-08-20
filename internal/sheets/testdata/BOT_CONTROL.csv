@@ -1,0 +1,13 @@
+key,value
+schema_version,1
+published_revision,12
+approved,TRUE
+mode,dry_run
+pause_new_orders,FALSE
+account_alias,main
+max_order_rub,15000.00
+max_total_reserve_rub,140000.00
+max_daily_turnover_rub,200000.00
+max_open_orders,20
+config_valid_until,2030-09-01T00:00:00Z
+comment,Golden fixture

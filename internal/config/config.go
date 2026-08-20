@@ -73,7 +73,7 @@ func load(ctx context.Context, lookup lookupEnv, read readFile) (Config, error) 
 		return Config{}, err
 	}
 
-	requestedMode, err := parseMode(envOrDefault(lookup, "TRADING_MODE", string(ModeDisabled)))
+	requestedMode, err := ParseTradingMode(envOrDefault(lookup, "TRADING_MODE", string(ModeDisabled)))
 	if err != nil {
 		return Config{}, err
 	}
@@ -149,7 +149,7 @@ func (c Config) Validate() error {
 	return errors.Join(validationErrors...)
 }
 
-func parseMode(value string) (TradingMode, error) {
+func ParseTradingMode(value string) (TradingMode, error) {
 	mode := TradingMode(strings.TrimSpace(value))
 	switch mode {
 	case ModeDisabled, ModeDryRun, ModeSandbox, ModeLive:

@@ -1,0 +1,19 @@
+revision,strategy_id,enabled,instrument_uid,ticker,level_no,base_position_qty,base_position_avg_price,sell_scope,step_budget_rub,entry_correction,exit_correction,preview_buy_price,preview_buy_lots,preview_sell_price,preview_sell_qty,max_level_amount_rub,auto_restart,comment
+12,sber-main,TRUE,uid-sber,sber,1,58,284.00,ladder_only,6000.00,0.03,0.05,275.48,21,289.25,21,100000.00,FALSE,SBER L1
+12,sber-main,TRUE,uid-sber,sber,2,58,284.00,ladder_only,7000.00,0.08,0.05,261.71,27,282.00,48,100000.00,FALSE,SBER L2
+12,sber-main,TRUE,uid-sber,sber,3,58,284.00,ladder_only,9000.00,0.13,0.05,246.55,36,274.00,84,100000.00,FALSE,SBER L3
+12,sber-main,TRUE,uid-sber,sber,4,58,284.00,ladder_only,11000.00,0.20,0.05,228.20,47,264.00,131,100000.00,FALSE,SBER L4
+12,sber-main,TRUE,uid-sber,sber,5,58,284.00,ladder_only,12000.00,0.30,0.05,203.77,58,250.00,189,100000.00,FALSE,SBER L5
+12,sber-main,TRUE,uid-sber,sber,6,58,284.00,ladder_only,15000.00,0.45,0.05,168.00,89,230.00,278,100000.00,FALSE,SBER L6
+12,trnfp-main,TRUE,uid-trnfp,trnfp,1,28,1055.59,ladder_only,5000.00,0.03,0.05,1028.40,4,1080.00,4,100000.00,FALSE,TRNFP L1
+12,trnfp-main,TRUE,uid-trnfp,trnfp,2,28,1055.59,ladder_only,6000.00,0.08,0.05,976.98,5,1060.00,9,100000.00,FALSE,TRNFP L2
+12,trnfp-main,TRUE,uid-trnfp,trnfp,3,28,1055.59,ladder_only,7000.00,0.13,0.05,920.41,6,1030.00,15,100000.00,FALSE,TRNFP L3
+12,trnfp-main,TRUE,uid-trnfp,trnfp,4,28,1055.59,ladder_only,8000.00,0.20,0.05,851.96,8,990.00,23,100000.00,FALSE,TRNFP L4
+12,trnfp-main,TRUE,uid-trnfp,trnfp,5,28,1055.59,ladder_only,9000.00,0.30,0.05,760.85,10,930.00,33,100000.00,FALSE,TRNFP L5
+12,trnfp-main,TRUE,uid-trnfp,trnfp,6,28,1055.59,ladder_only,10000.00,0.45,0.05,627.45,14,850.00,47,100000.00,FALSE,TRNFP L6
+12,btbr-main,TRUE,uid-btbr,btbr,1,142,118.00,ladder_only,4000.00,0.03,0.05,114.46,34,121.00,34,100000.00,FALSE,BTBR L1
+12,btbr-main,TRUE,uid-btbr,btbr,2,142,118.00,ladder_only,5000.00,0.08,0.05,108.74,45,118.00,79,100000.00,FALSE,BTBR L2
+12,btbr-main,TRUE,uid-btbr,btbr,3,142,118.00,ladder_only,7000.00,0.13,0.05,102.44,68,115.00,147,100000.00,FALSE,BTBR L3
+12,btbr-main,TRUE,uid-btbr,btbr,4,142,118.00,ladder_only,7000.00,0.20,0.05,94.81,73,110.00,220,100000.00,FALSE,BTBR L4
+12,btbr-main,TRUE,uid-btbr,btbr,5,142,118.00,ladder_only,8000.00,0.30,0.05,84.65,94,103.00,314,100000.00,FALSE,BTBR L5
+12,btbr-main,TRUE,uid-btbr,btbr,6,142,118.00,ladder_only,9000.00,0.45,0.05,81.00,111,96.00,425,100000.00,FALSE,BTBR L6
