@@ -66,6 +66,38 @@ func TestLoadDoesNotExposeSecretInError(t *testing.T) {
 	}
 }
 
+func TestLoadReadsDatabasePasswordFromEnvironment(t *testing.T) {
+	t.Parallel()
+
+	readCalled := false
+	cfg, err := load(context.Background(), mapLookup(map[string]string{
+		"DATABASE_PASSWORD": "env-password",
+	}), func(string) ([]byte, error) {
+		readCalled = true
+		return nil, errors.New("must not read password file")
+	})
+	if err != nil {
+		t.Fatalf("load config: %v", err)
+	}
+	if readCalled {
+		t.Fatal("password file was read when DATABASE_PASSWORD is set")
+	}
+	if cfg.Database.password != "env-password" {
+		t.Fatal("database password was not loaded from environment")
+	}
+}
+
+func TestLoadRejectsEmptyDatabasePasswordEnvironment(t *testing.T) {
+	t.Parallel()
+
+	_, err := load(context.Background(), mapLookup(map[string]string{
+		"DATABASE_PASSWORD": "   ",
+	}), fixedSecret("file-password"))
+	if err == nil || !strings.Contains(err.Error(), "DATABASE_PASSWORD must not be empty") {
+		t.Fatalf("error = %v, want empty DATABASE_PASSWORD error", err)
+	}
+}
+
 func TestLoadPropagatesCancelledContext(t *testing.T) {
 	t.Parallel()
 

@@ -88,10 +88,9 @@ func load(ctx context.Context, lookup lookupEnv, read readFile) (Config, error) 
 		return Config{}, fmt.Errorf("parse SHUTDOWN_TIMEOUT: must be a positive duration")
 	}
 
-	passwordPath := envOrDefault(lookup, "DATABASE_PASSWORD_FILE", "/run/secrets/postgres_password")
-	password, err := readSecret(ctx, read, passwordPath)
+	password, err := readDatabasePassword(ctx, lookup, read)
 	if err != nil {
-		return Config{}, fmt.Errorf("read database password file: %w", err)
+		return Config{}, fmt.Errorf("read database password: %w", err)
 	}
 
 	cfg := Config{
@@ -186,6 +185,25 @@ func readSecret(ctx context.Context, read readFile, path string) (string, error)
 		return "", errors.New("secret file is empty")
 	}
 	return secret, nil
+}
+
+func readDatabasePassword(ctx context.Context, lookup lookupEnv, read readFile) (string, error) {
+	if value, ok := lookup("DATABASE_PASSWORD"); ok {
+		if err := ctx.Err(); err != nil {
+			return "", err
+		}
+		if strings.TrimSpace(value) == "" {
+			return "", errors.New("DATABASE_PASSWORD must not be empty")
+		}
+		return value, nil
+	}
+
+	passwordPath := envOrDefault(lookup, "DATABASE_PASSWORD_FILE", "/run/secrets/postgres_password")
+	password, err := readSecret(ctx, read, passwordPath)
+	if err != nil {
+		return "", fmt.Errorf("read DATABASE_PASSWORD_FILE: %w", err)
+	}
+	return password, nil
 }
 
 func validateAddress(name, address string) error {

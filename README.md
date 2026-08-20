@@ -85,7 +85,7 @@ make infra-init
 make infra-config
 ```
 
-`make infra-init` автоматически копирует `deploy/.env.example` в `deploy/.env`, если локального файла ещё нет. Изменяй несекретные параметры запуска в `deploy/.env`; Docker Compose читает его явно через Makefile. Пароли, токены и credentials хранятся только в `secrets/*`, а в env указываются пути к ним.
+`make infra-init` автоматически создаёт `deploy/.env` из шаблона и генерирует локальный `DATABASE_PASSWORD`, если файла ещё нет. Docker Compose читает его явно через Makefile. Локальный `.env` исключён из Git; broker tokens и Google credentials по-прежнему должны храниться в secret files/manager.
 
 Затем запусти PostgreSQL, миграции и trader:
 

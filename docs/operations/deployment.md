@@ -34,7 +34,7 @@ Trader не получает доступ к Docker socket и директори
 
 ## 4. Переменные окружения
 
-Для Compose локальные несекретные значения находятся в `deploy/.env`. Файл создаётся командой `make infra-init` из версионируемого шаблона `deploy/.env.example`, исключён из Git и явно передаётся Compose через `--env-file`. Секретные значения в него не записываются.
+Для локального Compose значения находятся в `deploy/.env`. Файл создаётся командой `make infra-init` из версионируемого шаблона `deploy/.env.example`, получает случайный `DATABASE_PASSWORD`, исключён из Git и явно передаётся Compose через `--env-file`. Production credentials передаются через secret files/manager, не через committed `.env`.
 
 Несекретные:
 
@@ -56,12 +56,18 @@ TINVEST_ENDPOINT=sandbox-invest-public-api.tbank.ru:443
 TINVEST_ACCOUNT_ALIAS=main
 ```
 
+Локальный пароль генерируется только в игнорируемом `deploy/.env`:
+
+```dotenv
+DATABASE_PASSWORD=<local generated value>
+```
+
 Секретные значения не помещаются в `.env` внутри репозитория:
 
 ```text
 TINVEST_TOKEN_FILE=/run/secrets/tinvest_token
 TINVEST_ACCOUNT_ID_FILE=/run/secrets/tinvest_account_id
-DATABASE_PASSWORD_FILE=/run/secrets/postgres_password
+DATABASE_PASSWORD_FILE=/run/secrets/postgres_password  # production alternative
 GOOGLE_CREDENTIALS_FILE=/run/secrets/google_credentials.json
 ```
 

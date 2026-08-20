@@ -1,24 +1,19 @@
 ENV_FILE := deploy/.env
 ENV_EXAMPLE := deploy/.env.example
 COMPOSE := docker compose --env-file $(ENV_FILE) -f deploy/compose.yaml
-SECRET_FILE := secrets/postgres_password
 
 .PHONY: infra-env infra-init infra-config infra-up infra-status infra-check infra-logs infra-down
 
 infra-env:
 	@if [ ! -f "$(ENV_FILE)" ]; then \
-		cp "$(ENV_EXAMPLE)" "$(ENV_FILE)"; \
+		umask 077; \
+		database_password="$$(openssl rand -hex 32)"; \
+		sed "s/GENERATED_BY_MAKE_INFRA_INIT/$$database_password/" "$(ENV_EXAMPLE)" > "$(ENV_FILE)"; \
 		printf 'Created %s from %s\n' "$(ENV_FILE)" "$(ENV_EXAMPLE)"; \
 	fi
 
 infra-init: infra-env
-	@mkdir -p secrets
-	@if [ ! -s "$(SECRET_FILE)" ]; then \
-		umask 077; \
-		openssl rand -out "$(SECRET_FILE)" -hex 32; \
-		printf 'Created %s\n' "$(SECRET_FILE)"; \
-	fi
-	@chmod 600 "$(SECRET_FILE)"
+	@chmod 600 "$(ENV_FILE)"
 
 infra-config: infra-init
 	@$(COMPOSE) config --quiet
