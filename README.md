@@ -78,12 +78,14 @@ docs/
 
 ## Локальный запуск каркаса
 
-Создай локальный Docker secret, исключённый из Git, и проверь Compose-конфигурацию:
+Создай локальный `deploy/.env` из безопасного шаблона, локальный Docker secret и проверь Compose-конфигурацию:
 
 ```bash
 make infra-init
 make infra-config
 ```
+
+`make infra-init` автоматически копирует `deploy/.env.example` в `deploy/.env`, если локального файла ещё нет. Изменяй несекретные параметры запуска в `deploy/.env`; Docker Compose читает его явно через Makefile. Пароли, токены и credentials хранятся только в `secrets/*`, а в env указываются пути к ним.
 
 Затем запусти PostgreSQL, миграции и trader:
 

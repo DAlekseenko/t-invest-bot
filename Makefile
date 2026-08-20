@@ -1,9 +1,17 @@
-COMPOSE := docker compose -f deploy/compose.yaml
+ENV_FILE := deploy/.env
+ENV_EXAMPLE := deploy/.env.example
+COMPOSE := docker compose --env-file $(ENV_FILE) -f deploy/compose.yaml
 SECRET_FILE := secrets/postgres_password
 
-.PHONY: infra-init infra-config infra-up infra-status infra-check infra-logs infra-down
+.PHONY: infra-env infra-init infra-config infra-up infra-status infra-check infra-logs infra-down
 
-infra-init:
+infra-env:
+	@if [ ! -f "$(ENV_FILE)" ]; then \
+		cp "$(ENV_EXAMPLE)" "$(ENV_FILE)"; \
+		printf 'Created %s from %s\n' "$(ENV_FILE)" "$(ENV_EXAMPLE)"; \
+	fi
+
+infra-init: infra-env
 	@mkdir -p secrets
 	@if [ ! -s "$(SECRET_FILE)" ]; then \
 		umask 077; \

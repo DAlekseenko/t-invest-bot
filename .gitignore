@@ -4,5 +4,6 @@
 /healthcheck
 /migrate
 /trader
+deploy/.env
 secrets/*
 !secrets/.gitkeep
