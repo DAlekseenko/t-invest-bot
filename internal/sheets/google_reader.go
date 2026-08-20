@@ -38,10 +38,10 @@ func NewGoogleReader(ctx context.Context, spreadsheetID, credentialsFile string)
 		return nil, err
 	}
 	if strings.TrimSpace(spreadsheetID) == "" {
-		return nil, errors.New("Google spreadsheet ID is required")
+		return nil, errors.New("google spreadsheet ID is required")
 	}
 	if strings.TrimSpace(credentialsFile) == "" {
-		return nil, errors.New("Google credentials file is required")
+		return nil, errors.New("google credentials file is required")
 	}
 
 	contents, err := readCredentialsFile(credentialsFile)
@@ -60,14 +60,14 @@ func NewGoogleReader(ctx context.Context, spreadsheetID, credentialsFile string)
 
 func newGoogleReader(client *http.Client, spreadsheetID, baseURL string) (*GoogleReader, error) {
 	if client == nil {
-		return nil, errors.New("Google Sheets HTTP client is required")
+		return nil, errors.New("google Sheets HTTP client is required")
 	}
 	if strings.TrimSpace(spreadsheetID) == "" {
-		return nil, errors.New("Google spreadsheet ID is required")
+		return nil, errors.New("google spreadsheet ID is required")
 	}
 	parsedBaseURL, err := url.Parse(baseURL)
 	if err != nil || parsedBaseURL.Scheme == "" || parsedBaseURL.Host == "" {
-		return nil, errors.New("Google Sheets base URL is invalid")
+		return nil, errors.New("google Sheets base URL is invalid")
 	}
 	return &GoogleReader{
 		client:        client,
@@ -78,7 +78,7 @@ func newGoogleReader(client *http.Client, spreadsheetID, baseURL string) (*Googl
 
 func (reader *GoogleReader) ReadRange(ctx context.Context, rangeName string) ([][]string, error) {
 	if reader == nil || reader.client == nil {
-		return nil, errors.New("Google Sheets reader is required")
+		return nil, errors.New("google Sheets reader is required")
 	}
 	if err := validateRange(rangeName); err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func readCredentialsFile(path string) ([]byte, error) {
 		return nil, err
 	}
 	if len(contents) > maxCredentialsSize {
-		return nil, errors.New("Google credentials file is too large")
+		return nil, errors.New("google credentials file is too large")
 	}
 	return contents, nil
 }
@@ -150,10 +150,10 @@ func requireServiceAccount(contents []byte) error {
 		Type string `json:"type"`
 	}
 	if err := json.Unmarshal(contents, &descriptor); err != nil {
-		return errors.New("Google credentials file is not valid JSON")
+		return errors.New("google credentials file is not valid JSON")
 	}
 	if descriptor.Type != "service_account" {
-		return errors.New("Google credentials must have service_account type")
+		return errors.New("google credentials must have service_account type")
 	}
 	return nil
 }
@@ -163,7 +163,7 @@ func validateRange(rangeName string) error {
 	case ControlRange, ConfigRange:
 		return nil
 	default:
-		return errors.New("Google Sheets range is outside the configuration contract")
+		return errors.New("google Sheets range is outside the configuration contract")
 	}
 }
 
